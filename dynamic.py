@@ -2,7 +2,7 @@ import math
 from copy import deepcopy
 from tabulate import tabulate
 
-def matrixChain(d):
+def matrixChainProduct(d):
   #returns table M with entries [minimum multiplications, cutoff matrix]
   n = len(d)
   M = [[[0] for x in range(n)] for y in range(n)]
@@ -23,7 +23,7 @@ def matrixChain(d):
     M[x].pop(0)
   return M
 
-def matrixMult(W):
+def matrixMultShortestPaths(W):
   def matMul(A, B):
     n = len(A)
     C = [ [[0, 0] for j in range(n)]  for i in range(n)]
@@ -57,7 +57,7 @@ def matrixMult(W):
     #print(iter, tabulate(W))
   return W
 
-def floyd(W):
+def floydWarshall(W):
   #returns table W with entries [shortest path length, intermediary node (0 is direct edge)]
   n = len(W)
   D = deepcopy(W)
@@ -132,8 +132,8 @@ def CYK(P, s):
   
 if __name__ == "__main__":
   d = [3, 2, 5, 2, 4, 3]
-  res = matrixChain(d)
-  print("Q1: Matrix chain product")
+  res = matrixChainProduct(d)
+  print("Matrix chain product")
   print(tabulate(res))
   print()
   
@@ -144,8 +144,8 @@ if __name__ == "__main__":
        [i, i, i, 0, 3, i],
        [i, -1, i, 3, 0, 4],
        [i, i, i, i, 4, 0]]
-  res = floyd(W)
-  print("Q2: Floyd Warshall")
+  res = floydWarshall(W)
+  print("Floyd Warshall")
   print(tabulate(res))
   print()
   
@@ -159,7 +159,7 @@ if __name__ == "__main__":
   }
   s = "aaabab"
   res = CYK(P, s)
-  print("Q3: CYK Algorithm")
+  print("CYK Algorithm")
   print(tabulate(res))
   print()
   #makeTrees(res, P, "S", s)
@@ -171,8 +171,8 @@ if __name__ == "__main__":
        [i, 8, i, 0, -5, 12],
        [i, 7, -2, i, 0, -1],
        [i, i, i, i, 8, 0]]
-  res = matrixMult(W)
-  print("MATRIX MULTIPLICAIOTN")
+  res = matrixMultShortestPaths(W)
+  print("MATRIX MULTIPLICATION")
   print(tabulate(res))
   print()
 
