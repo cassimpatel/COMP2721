@@ -1,7 +1,8 @@
 import copy
 import math
 
-class BinaryHeapNode():
+class HeapNode():
+    # element key (priority) and auxiliary information
     k = None
     e = None
 
@@ -10,15 +11,14 @@ class BinaryHeapNode():
         self.e = e
     
     def __repr__(self):
-        return "Priority {} binary heap node [{}]".format(self.k, self.e)
+        return "Priority {} heap node [{}]".format(self.k, self.e)
 
     def __copy__(self):
-        newObj = BinaryHeapNode(self.k, self.e)
+        newObj = HeapNode(self.k, self.e)
         return newObj
 
     def __lt__(self, other):
         return self.k < other.k
-
 
 class BinaryHeap():
     H = []
@@ -35,7 +35,7 @@ class BinaryHeap():
         return newObj
 
     def isEmpty(self):
-        return len(H) == 0
+        return len(self.H) == 0
 
     def numElem(self):
         return len(self.H)
@@ -46,12 +46,12 @@ class BinaryHeap():
         if infos == None:
             infos = [None for x in range(len(priorities))]
         for i in range(len(priorities)):
-            newObj.H.append(BinaryHeapNode(priorities[i], infos[i]))
+            newObj.H.append(HeapNode(priorities[i], infos[i]))
         return newObj
 
     def insert(self, k, i=None):
         newObj = copy.copy(self)
-        newObj.H.append(BinaryHeapNode(k, i))
+        newObj.H.append(HeapNode(k, i))
         newObj.toggleUp(newObj.numElem() - 1)
         return newObj
 
@@ -102,36 +102,75 @@ class BinaryHeap():
             newObj.toggleDown(i)
         return newObj
 
-class BinomialHeapNode():
-    key = None
-    info = None
-
+class BinomialHeapNode(HeapNode):
     degree = None
     child = None
     sibling = None
 
-    # constructor, repr, copy, deepcopy
-    pass
+    def __init__(self, k, e=None):
+        self.k = k
+        self.e = e
+        self.degree = 0
+        self.child = None
+        self.sibling = None
+
+    def __repr__(self):
+        return "Priority {} degree-{} binomial heap node [{}]".format(self.k, self.degree, self.e)
+
+    def __copy__(self):
+        newObj = BinomialHeapNode(self.k, self.e)
+        return newObj    
 
 class BinomialTree():
-    # constructor, repr, copy, deepcopy
-    # link
-    pass
+    root = None
+
+    def __init__(self):
+        pass
+
+    def __repr__(self):
+        pass
+
+    def __copy__(self):
+        pass
+
+    def link(self, other):
+        pass
 
 class BinomialHeap():
     root = None
 
-    # constructor, repr, copy, deepcopy
-    # isEmpty, insert, minimum, deleteMin
-    # peek, merge
-    pass
+    def __init__(self):
+        pass
+
+    def __repr__(self):
+        pass
+
+    def __copy__(self):
+        pass
+
+    def isEmpty(self):
+        pass
+
+    def insert(self):
+        pass
+
+    def minimum(self):
+        pass
+
+    def deleteMin(self):
+        pass
+
+    def peek(self):
+        pass
+
+    def merge(self, other):
+        pass
 
 if __name__ == "__main__":
     print("priority queue tests")
 
     x = BinaryHeap()
-    print(x)
-
+    print("Empty heap", x)
     x = x.buildHeap([2, 4, 5, 8, 6, 7])
     print(x)
     print("After insertion of 3", x.insert(3))
