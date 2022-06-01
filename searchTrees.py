@@ -1,3 +1,5 @@
+import copy
+
 class SearchTreeNode():
     key = None
     info = None
@@ -6,67 +8,112 @@ class SearchTreeNode():
     right = None
     parent = None
 
-    def __init__(self):
-        pass
+    def __init__(self, key, info=None, parent=None):
+        self.key = key
+        self.info = info
+        self.parent = parent
+        self.left = None
+        self.right = None
 
     def __repr__(self):
-        pass
+        return "Search node {}:{}".format(self.key, self.info)
 
     def __copy__(self):
-        pass
+        newObj = SearchTreeNode(self.key, self.info, self.parent)
+        if self.left != None:
+            newObj.left = copy.copy(self.left)
+        if self.right != None:
+            newObj.right = copy.copy(self.right)
+        return newObj
 
     def inorder(self):
-        pass
-
+        if self.left is not None:
+            self.left.inorder()
+        print(self.key)
+        if self.right is not None:
+            self.right.inorder()
+        
     def preorder(self):
-        pass
+        print(self.key)
+        if self.left is not None:
+            self.left.inorder()
+        if self.right is not None:
+            self.right.inorder()
 
     def postorder(self):
-        pass
+        if self.left is not None:
+            self.left.inorder()
+        if self.right is not None:
+            self.right.inorder()
+        print(self.key)
 
     def minimum(self):
-        pass
+        r = self
+        while r.left != None:
+            r = r.left
+        return r
 
     def maximum(self):
-        pass
+        r = self
+        while r.right != None:
+            r = r.right
+        return r
 
     def predecessor(self):
-        pass
+        n = self
+        if n.left != None:
+            return n.left.maximum()
+        else:
+            p = n.parent
+            while p != None and n == p.left:
+                n = p
+                p = p.parent
+            return p
 
     def successor(self):
-        pass
+        n = self
+        if n.right != None:
+            return n.right.minimum()
+        else:
+            p = n.parent
+            while p != None and n == p.right:
+                n = p
+                p = p.parent
+            return p
 
     # lt, gt opreators?
 
 class BinarySearchTree():
     root = None
 
-    def __init__(self):
-        pass
+    def __init__(self, root=None):
+        self.root = root
 
     def __repr__(self):
-        pass
+        return "Binary Search Tree with root ({})".format(self.root)
 
     def __copy__(self):
-        pass
+        newObj = BinarySearchTree()
+        newObj.root = copy.copy(self.root)
+        return newObj
 
     def isEmpty(self):
-        pass
+        return self.root == None
 
     def inorder(self):
-        pass
+        self.root.inorder()
 
     def preorder(self):
-        pass
+        self.root.preorder()
 
     def postorder(self):
-        pass
+        self.root.postorder()
 
     def minimum(self):
-        pass
+        self.root.minimum()
 
     def maximum(self):
-        pass
+        self.root.maximimum()
 
     def member(self):
         pass
