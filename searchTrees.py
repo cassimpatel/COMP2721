@@ -29,23 +29,23 @@ class SearchTreeNode():
     def inorder(self):
         if self.left is not None:
             self.left.inorder()
-        print(self.key)
+        print(self.key, " ", end="")
         if self.right is not None:
             self.right.inorder()
         
     def preorder(self):
-        print(self.key)
+        print(self.key, " ", end="")
         if self.left is not None:
-            self.left.inorder()
+            self.left.preorder()
         if self.right is not None:
-            self.right.inorder()
+            self.right.preorder()
 
     def postorder(self):
         if self.left is not None:
-            self.left.inorder()
+            self.left.postorder()
         if self.right is not None:
-            self.right.inorder()
-        print(self.key)
+            self.right.postorder()
+        print(self.key, " ", end="")
 
     def minimum(self):
         r = self
@@ -101,13 +101,19 @@ class BinarySearchTree():
         return self.root == None
 
     def inorder(self):
+        print("Printing inorder traversal")
         self.root.inorder()
+        print()
 
     def preorder(self):
+        print("Printing preorder traversal")
         self.root.preorder()
+        print()
 
     def postorder(self):
+        print("Printing postorder traversal")
         self.root.postorder()
+        print()
 
     def minimum(self):
         self.root.minimum()
@@ -115,17 +121,81 @@ class BinarySearchTree():
     def maximum(self):
         self.root.maximimum()
 
-    def member(self):
-        pass
+    def member(self, key):
+        return self.lookUp(key) != None
 
-    def lookUp(self):
-        pass
+    def search(self, key):
+        r = self.root
+        while r != None and r.key != key:
+            if key < r.key:
+                r = r.left
+            else:
+                r = r.right
+        return r
 
-    def insert(self):
-        pass
+    def lookUp(self, key):
+        node = self.search(key)
+        if node == None:
+            return None
+        return node.info
 
-    def delete(self):
-        pass
+    def insert(self, key, info=None):
+        newObj = copy.copy(self)
+        
+        r = newObj.root
+        r2 = None # originally r' from lectures
+        p = r
+        n = SearchTreeNode(key, info)
+        while p != None:
+            r2 = p
+            p = p.left if n.key < p.key else p.right
+        n.parent = r2
+        n.left = None
+        n.right = None
+        if r2 == None:
+            newObj.root = n
+        else:
+            if n.key < r2.key:
+                # print(n, "to left of", r2)
+                r2.left = n
+            else:
+                # print(n, "to right of", r2)
+                r2.right = n
+        
+        return newObj
+
+    def insertMultiple(self, keys, infos=None):
+        if infos == None:
+            infos = [None for x in range(len(keys))]
+        newObj = copy.copy(self)
+        for i in range(len(keys)):
+            newObj = newObj.insert(keys[i], infos[i])
+        return newObj
+
+    def delete(self, key):
+        newObj = copy.copy(self)
+        node = newObj.search(key)
+        newObj.remove(node)
+        return newObj
+
+    def remove(self, node):
+        q = node
+        if q.left == None or q.right == None:
+            r2 = q
+        else:
+            r2 = q.successor()
+            q.key = r2.key
+            q.info = r2.info
+        p = r2.left if r2.left != None else r2.right
+        if p != None:
+            p.parent = r2.parent
+        if r2.parent == None:
+            self.root = p
+        else:
+            if r2 == r2.parent.left:
+                r2.parent.left = p
+            else:
+                r2.parent.right = p
 
 class RedBlackNode(SearchTreeNode):
     colour = None
@@ -171,4 +241,19 @@ class AVLTree():
 
 if __name__ == "__main__":
     print("Testing search trees")
+
+    x = BinarySearchTree()
+    x = x.insertMultiple([15, 5, 3, 12, 10, 6, 7, 13, 16, 20, 18, 23])
+    x.inorder()
+    x.preorder()
+    x.postorder()
+    # print(x)
+    print()
+
+    
+    # deletion is not working
+    y = x.delete(13)
+    y.inorder()
+    y.preorder()
+    
     print()
