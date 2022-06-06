@@ -1,4 +1,3 @@
-import copy
 from tabulate import tabulate
 
 class HashEntry():
@@ -14,7 +13,7 @@ class HashEntry():
   def __repr__(self):
     return "[{}] hash table entry '{}':'{}'".format(self.status, self.k, self.i)
   
-  def __copy__(self):
+  def copy(self):
     return HashEntry(self.k, self.status, self.i)
 
   def used(self):
@@ -33,9 +32,9 @@ class HashTable():
     self.h1 = hashFunc
     self.T = [HashEntry() for i in range(m)]
 
-  def __copy__(self):
+  def copy(self):
     newObj = HashTable(self.m, self.h1)
-    newObj.T = [copy.copy(entry) for entry in self.T]
+    newObj.T = [entry.copy() for entry in self.T]
     return newObj
 
   def isEmpty(self):
@@ -45,7 +44,7 @@ class HashTable():
     return True
 
   def setTable(self, keys):
-    newTable = copy.copy(self)
+    newTable = self.copy()
     if len(keys) != newTable.m:
       raise Exception("invalid size for manual table loading")
 
@@ -57,13 +56,13 @@ class HashTable():
     return newTable
 
   def getLoadFactor(self):
-    return n/m
+    return self.n/self.m
 
   def h(self, k, i):
     return (self.h1(k) + i) % self.m
   
   def probingOrder(self, k):
-    return [self.h(k, i) for i in range(m)]
+    return [self.h(k, i) for i in range(self.m)]
 
   def member(self, key):
     for index in self.probingOrder(key):
@@ -91,7 +90,7 @@ class HashTable():
     elif self.member(key):
       raise Exception("Key already exists in dictionary")
       
-    newHashTable = copy.copy(self)
+    newHashTable = self.copy()
     for index in self.probingOrder(key):
       entry = self.T[index]
       if entry.status != "USED":
@@ -104,14 +103,14 @@ class HashTable():
     num = len(keys)
     if infos == None:
       infos = [None for x in range(num)]
-    newHashTable = copy.copy(self)
+    newHashTable = self.copy()
     
     for i in range(num):
       newHashTable = newHashTable.insert(keys[i], infos[i])
     return newHashTable
 
   def delete(self, key):
-    newHashTable = copy.copy(self)
+    newHashTable = self.copy()
 
     for index in self.probingOrder(key):
       entry = self.T[index]
@@ -124,7 +123,7 @@ class HashTable():
     raise Exception("Key to remove is not in hash table")
     
   def getKeys(self):
-    return [self.T[x].k for x in range(m) if self.T[x].used()]
+    return [self.T[x].k for x in range(self.m) if self.T[x].used()]
 
   def getAverageSearchTime(self):
     keys = self.getKeys()
@@ -161,11 +160,11 @@ class QuadraticHashTable(HashTable):
     self.h1 = hashFunc
     self.c1 = c1
     self.c2 = c2
-    self.T = [HashEntry() for i in range(m)]
+    self.T = [HashEntry() for i in range(self.m)]
 
-  def __copy__(self):
+  def copy(self):
     newObj = QuadraticHashTable(self.m, self.h1, self.c1, self.c2)
-    newObj.T = [copy.copy(entry) for entry in self.T]
+    newObj.T = [entry.copy() for entry in self.T]
     return newObj
     
   def h(self, k, i):
@@ -181,18 +180,18 @@ class DoubleHashTable(HashTable):
     self.h2 = secondFunc
     self.T = [HashEntry() for i in range(m)]
 
-  def __copy__(self):
+  def copy(self):
     newObj = DoubleHashTable(self.m, self.h1, self.h2)
-    newObj.T = [copy.copy(entry) for entry in self.T]
+    newObj.T = [entry.copy() for entry in self.T]
     return newObj
 
   def h(self, k, i):
     return (self.h1(k) + i*self.h2(k)) % self.m
 
 class BrentHashTable(DoubleHashTable):
-  def __copy__(self):
+  def copy(self):
     newObj = BrentHashTable(self.m, self.h1, self.h2)
-    newObj.T = [copy.copy(entry) for entry in self.T]
+    newObj.T = [entry.copy() for entry in self.T]
     return newObj
     
   def insert(self, key, info=None):
@@ -201,7 +200,7 @@ class BrentHashTable(DoubleHashTable):
     elif self.member(key):
       raise Exception("Key already exists in dictionary")
       
-    newHashTable = copy.copy(self)
+    newHashTable = self.copy()
     for index in newHashTable.probingOrder(key):
       entry = newHashTable.T[index]
       if entry.status != "USED":
@@ -225,7 +224,7 @@ class BrentHashTable(DoubleHashTable):
     num = len(keys)
     if infos == None:
       infos = [None for x in range(num)]
-    newHashTable = copy.copy(self)
+    newHashTable = self.copy()
     
     for i in range(num):
       newHashTable = newHashTable.insert(keys[i], infos[i])

@@ -1,4 +1,3 @@
-import copy
 import math
 
 class HeapNode():
@@ -13,7 +12,7 @@ class HeapNode():
     def __repr__(self):
         return "Priority {} heap node [{}]".format(self.k, self.e)
 
-    def __copy__(self):
+    def copy(self):
         newObj = HeapNode(self.k, self.e)
         return newObj
 
@@ -29,9 +28,9 @@ class BinaryHeap():
     def __repr__(self):
         return "Binary heap: {}".format(", ".join([str(x.k) for x in self.H]))
 
-    def __copy__(self):
+    def copy(self):
         newObj = BinaryHeap()
-        newObj.H = [copy.copy(x) for x in self.H]
+        newObj.H = [x.copy() for x in self.H]
         return newObj
 
     def isEmpty(self):
@@ -41,7 +40,7 @@ class BinaryHeap():
         return len(self.H)
 
     def setUp(self, priorities, infos=None):
-        newObj = copy.copy(self)
+        newObj = self.copy()
         newObj.H = []
         if infos == None:
             infos = [None for x in range(len(priorities))]
@@ -50,7 +49,7 @@ class BinaryHeap():
         return newObj
 
     def insert(self, k, i=None):
-        newObj = copy.copy(self)
+        newObj = self.copy()
         newObj.H.append(HeapNode(k, i))
         newObj.toggleUp(newObj.numElem() - 1)
         return newObj
@@ -63,7 +62,7 @@ class BinaryHeap():
         return (minElem.i, minElem.k)
 
     def deleteMin(self):
-        newObj = copy.copy(self)
+        newObj = self.copy()
         newObj.H[0], newObj.H[-1] = newObj.H[-1], newObj.H[0]
         del newObj.H[-1]
         newObj.toggleDown(0)
@@ -96,7 +95,7 @@ class BinaryHeap():
             self.toggleDown(j)
 
     def buildHeap(self, array):
-        newObj = copy.copy(self)
+        newObj = self.copy()
         newObj = newObj.setUp(array)
         for i in range(math.floor(len(array)/2), -1, -1):
             newObj.toggleDown(i)
@@ -117,7 +116,7 @@ class BinomialHeapNode(HeapNode):
     def __repr__(self):
         return "Priority {} degree-{} binomial heap node [{}]".format(self.k, self.degree, self.e)
 
-    def __copy__(self):
+    def copy(self):
         newObj = BinomialHeapNode(self.k, self.e)
         return newObj    
 
@@ -130,7 +129,7 @@ class BinomialTree():
     def __repr__(self):
         pass
 
-    def __copy__(self):
+    def copy(self):
         pass
 
     def link(self, other):
@@ -145,7 +144,7 @@ class BinomialHeap():
     def __repr__(self):
         pass
 
-    def __copy__(self):
+    def copy(self):
         pass
 
     def isEmpty(self):

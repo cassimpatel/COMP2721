@@ -1,5 +1,3 @@
-import copy
-
 class SearchTreeNode():
     key = None
     info = None
@@ -18,12 +16,12 @@ class SearchTreeNode():
     def __repr__(self):
         return "Search node {}:{}".format(self.key, self.info)
 
-    def __copy__(self):
+    def copy(self):
         newObj = SearchTreeNode(self.key, self.info, self.parent)
-        if self.left != None:
-            newObj.left = copy.copy(self.left)
-        if self.right != None:
-            newObj.right = copy.copy(self.right)
+        if self.left is not None:
+            newObj.left = self.left.copy()
+        if self.right is not None:
+            newObj.right = self.right.copy()
         return newObj
 
     def inorder(self):
@@ -49,39 +47,37 @@ class SearchTreeNode():
 
     def minimum(self):
         r = self
-        while r.left != None:
+        while r.left is not  None:
             r = r.left
         return r
 
     def maximum(self):
         r = self
-        while r.right != None:
+        while r.right is not None:
             r = r.right
         return r
 
     def predecessor(self):
         n = self
-        if n.left != None:
+        if n.left is not None:
             return n.left.maximum()
         else:
             p = n.parent
-            while p != None and n == p.left:
+            while p is not None and n is p.left:
                 n = p
                 p = p.parent
             return p
 
     def successor(self):
         n = self
-        if n.right != None:
+        if n.right is not None:
             return n.right.minimum()
         else:
             p = n.parent
-            while p != None and n == p.right:
+            while p is not None and n is p.right:
                 n = p
                 p = p.parent
             return p
-
-    # lt, gt opreators?
 
 class BinarySearchTree():
     root = None
@@ -92,13 +88,14 @@ class BinarySearchTree():
     def __repr__(self):
         return "Binary Search Tree with root ({})".format(self.root)
 
-    def __copy__(self):
+    def copy(self):
         newObj = BinarySearchTree()
-        newObj.root = copy.copy(self.root)
+        if self.root is not None:
+            newObj.root = self.root.copy()
         return newObj
 
     def isEmpty(self):
-        return self.root == None
+        return self.root is None
 
     def inorder(self):
         print("Printing inorder traversal")
@@ -122,11 +119,11 @@ class BinarySearchTree():
         self.root.maximimum()
 
     def member(self, key):
-        return self.lookUp(key) != None
+        return self.search(key) is not None
 
     def search(self, key):
         r = self.root
-        while r != None and r.key != key:
+        while r is not None and r.key != key:
             if key < r.key:
                 r = r.left
             else:
@@ -135,24 +132,24 @@ class BinarySearchTree():
 
     def lookUp(self, key):
         node = self.search(key)
-        if node == None:
+        if node is None:
             return None
         return node.info
 
     def insert(self, key, info=None):
-        newObj = copy.copy(self)
+        newObj = self.copy()
         
         r = newObj.root
         r2 = None # originally r' from lectures
         p = r
         n = SearchTreeNode(key, info)
-        while p != None:
+        while p is not None:
             r2 = p
             p = p.left if n.key < p.key else p.right
         n.parent = r2
         n.left = None
         n.right = None
-        if r2 == None:
+        if r2 is None:
             newObj.root = n
         else:
             if n.key < r2.key:
@@ -161,41 +158,46 @@ class BinarySearchTree():
             else:
                 # print(n, "to right of", r2)
                 r2.right = n
-        
         return newObj
 
     def insertMultiple(self, keys, infos=None):
         if infos == None:
             infos = [None for x in range(len(keys))]
-        newObj = copy.copy(self)
+        newObj = self.copy()
         for i in range(len(keys)):
             newObj = newObj.insert(keys[i], infos[i])
         return newObj
 
     def delete(self, key):
-        newObj = copy.copy(self)
+        newObj = self.copy()
         node = newObj.search(key)
         newObj.remove(node)
         return newObj
 
     def remove(self, node):
         q = node
-        if q.left == None or q.right == None:
+        if q.left is None or q.right is None:
             r2 = q
         else:
             r2 = q.successor()
             q.key = r2.key
             q.info = r2.info
-        p = r2.left if r2.left != None else r2.right
-        if p != None:
+        p = r2.left if r2.left is not None else r2.right
+
+        # print(" q is", q, id(q))
+        # print("r2 is", r2, id(r2))
+        # print(" p is", p, id(p))
+        
+        if p is not None:
             p.parent = r2.parent
-        if r2.parent == None:
+        if r2.parent is None:
             self.root = p
         else:
-            if r2 == r2.parent.left:
+            if r2 is r2.parent.left:
                 r2.parent.left = p
             else:
                 r2.parent.right = p
+        return self
 
 class RedBlackNode(SearchTreeNode):
     colour = None
@@ -206,7 +208,7 @@ class RedBlackNode(SearchTreeNode):
     def __repr__(self):
         pass
 
-    def __copy__(self):
+    def copy(self):
         pass
 
 class RedBlackTree():
@@ -216,7 +218,7 @@ class RedBlackTree():
     def __repr__(self):
         pass
 
-    def __copy__(self):
+    def copy(self):
         pass
 
     def insert(self):
@@ -241,15 +243,14 @@ class AVLTree():
 
 if __name__ == "__main__":
     print("Testing search trees")
+    print()
 
     x = BinarySearchTree()
     x = x.insertMultiple([15, 5, 3, 12, 10, 6, 7, 13, 16, 20, 18, 23])
     x.inorder()
     x.preorder()
-    x.postorder()
-    # print(x)
+    #x.postorder()
     print()
-
     
     # deletion is not working
     y = x.delete(13)
