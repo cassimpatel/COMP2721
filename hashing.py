@@ -135,6 +135,8 @@ class HashTable():
         probings[a] += 1
         if self.T[index].used() and self.T[index].k == k:
           break
+        elif self.T[index].status == "FREE":
+          break
     return sum(probings)/len(probings)
 
   def show(self):
@@ -178,7 +180,7 @@ class DoubleHashTable(HashTable):
     self.n = 0
     self.h1 = hashFunc
     self.h2 = secondFunc
-    self.T = [HashEntry() for i in range(m)]
+    self.T = [HashEntry() for i in range(self.m)]
 
   def copy(self):
     newObj = DoubleHashTable(self.m, self.h1, self.h2)
@@ -234,43 +236,43 @@ if __name__ == "__main__":
   print("Running hash table test")
   
   # Linear probing example
-  # m = 8
-  # def h1(k):
-  #   return k % m
-  # x = HashTable(m, h1)
-  # x = x.insertMultiple([10, 19, 31, 22, 14, 16])
-  # x.show()
-  # print(x.getAverageSearchTime())
+  m = 8
+  def h1(k):
+    return k % m
+  x = HashTable(m, h1)
+  x = x.insertMultiple([10, 19, 31, 22, 14, 16])
+  x.show()
+  print(x.getAverageSearchTime())
 
   # Quadratic probing example
-  # m = 8
-  # def h1(k):
-  #   return k % m
-  # x = QuadraticHashTable(m, h1, 0.5, 0.5)
-  # x = x.insertMultiple([10, 19, 31, 22, 14, 16])
-  # x.show()
-  # print(x.getAverageSearchTime())
+  m = 8
+  def h1(k):
+    return k % m
+  x = QuadraticHashTable(m, h1, 0.5, 0.5)
+  x = x.insertMultiple([10, 19, 31, 22, 14, 16])
+  x.show()
+  print(x.getAverageSearchTime())
 
   # Double hashing example
-  # m = 7
-  # def h1(k):
-  #   return k % 7
-  # def h2(k):
-  #   return 1 + (k % 5)
-  # x = DoubleHashTable(m, h1, h2)
-  # x = x.insertMultiple([10, 19, 31, 22, 14, 16])
-  # x.show()
-  # print(x.getAverageSearchTime())
+  m = 7
+  def h1(k):
+    return k % 7
+  def h2(k):
+    return 1 + (k % 5)
+  x = DoubleHashTable(m, h1, h2)
+  x = x.insertMultiple([10, 19, 31, 22, 14, 16])
+  x.show()
+  print(x.getAverageSearchTime())
 
   # Brent's double hashing example
-  # m = 7
-  # def h1(k):
-  #   return k % 7
-  # def h2(k):
-  #   return 1 + (k % 5)
-  # x = BrentHashTable(m, h1, h2)
-  # x = x.insertMultiple([10, 19, 31, 22, 14, 16])
-  # x.show()
-  # print(x.getAverageSearchTime())
+  m = 7
+  def h1(k):
+    return k % 7
+  def h2(k):
+    return 1 + (k % 5)
+  x = BrentHashTable(m, h1, h2)
+  x = x.insertMultiple([10, 19, 31, 22, 14, 16])
+  x.show()
+  print(x.getAverageSearchTime())
 
   print()
